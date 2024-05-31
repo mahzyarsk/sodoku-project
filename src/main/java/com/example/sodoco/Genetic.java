@@ -45,23 +45,34 @@ public class Genetic {
         }
 
 
-        for (int i = 0; i < generation / 2; i++) {
+        for (int i = 0; i < generation / 2; i=i+2) {
             int[] genes1 = Generation.get(i).getGen();
             int[] genes2 = Generation.get(i + 1).getGen();
+            int[] genes3 = Generation.get(i).getGen();
+            int[] genes4 = Generation.get(i + 1).getGen();
 
-            for (int j = 0; j < genes1.length / 2; j++) {
+            for (int j = 0; j < genes4.length / 2; j++) {
+                int temp = genes4[j];
+                genes4[j] = genes3[j];
+                genes3[j] = temp;
+            } for (int j = 0; j < genes1.length / 2; j++) {
                 int temp = genes1[j];
                 genes1[j] = genes2[j];
                 genes2[j] = temp;
             }
+            Generation.get(i+1).setGen(genes4);
+            Generation.get(i+1).setFitness(Fitness(genes4));
             Generation.get(i).setGen(genes1);
             Generation.get(i).setFitness(Fitness(genes1));
-            System.out.println("فرد " + i + " تناسب: " + Generation.get(i).getFitness());
+
 
             if (Generation.get(i).getFitness() == 0) {
                 System.out.println("تناسب بهینه در اندیس " + i + " حاصل شد");
                 return;
             }
+        }
+        for (int i = 0; i < generation / 2; i++){
+            System.out.println("فرد " + i + " تناسب: " + Generation.get(i).getFitness());
         }
         generation = generation / 2;
         Collections.sort(Generation, Comparator.comparing(GEN::getFitness));
