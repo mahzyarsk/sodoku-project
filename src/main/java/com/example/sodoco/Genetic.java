@@ -35,21 +35,21 @@ public class Genetic {
             Generation.add(G);
         }
         Collections.sort(Generation, Comparator.comparing(GEN::getFitness));
-        Mutation();
+        Crossover();
     }
 
-    public static void Mutation() {
+    public static void Crossover() {
 
         if (generation <= 10) {
             return;
         }
 
 
-        for (int i = 0; i < generation / 2; i=i+2) {
+        for (int i = 0; i < generation ; i=i+2) {
             int[] genes1 = Generation.get(i).getGen();
             int[] genes2 = Generation.get(i + 1).getGen();
-            int[] genes3 = Generation.get(i).getGen();
-            int[] genes4 = Generation.get(i + 1).getGen();
+            int[] genes3 = Generation.get(i+2).getGen();
+            int[] genes4 = Generation.get(i +1).getGen();
 
             for (int j = 0; j < genes4.length / 2; j++) {
                 int temp = genes4[j];
@@ -71,12 +71,29 @@ public class Genetic {
                 return;
             }
         }
+
+
+        Collections.sort(Generation, Comparator.comparing(GEN::getFitness));
         for (int i = 0; i < generation / 2; i++){
             System.out.println("فرد " + i + " تناسب: " + Generation.get(i).getFitness());
         }
-        generation = generation / 2;
-        Collections.sort(Generation, Comparator.comparing(GEN::getFitness));
+        generation = generation-10000;
         Mutation();
+        Crossover();
+    }
+    public static void Mutation(){
+        Random random = new Random();
+        int mutationRate = 20;
+        for (int i = 0; i < Generation.get(1).getGen().length; i++) {
+            int genes[] =Generation.get(i).getGen();
+            if (random.nextInt(100) < mutationRate) {
+                int newValue = random.nextInt(8) + 1;
+                genes[i] = newValue;
+                Generation.get(i).setGen(genes);
+            }
+        }
+
+
     }
 
     public static int Fitness(int ftable[]){
