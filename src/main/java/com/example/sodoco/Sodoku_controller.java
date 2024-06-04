@@ -30,4 +30,11 @@ public class Sodoku_controller {
 
 
     }
+
+    public void Gen_BTN(ActionEvent event) {
+        if (set){
+            Genetic2 g =new Genetic2();
+            g.genetic(temp);
+        }
+    }
 }

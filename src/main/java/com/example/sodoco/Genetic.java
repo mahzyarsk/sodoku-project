@@ -28,7 +28,6 @@ public class Genetic {
                 }
             }
 
-            // Make a copy of gtable
             int[] gtableCopy = new int[gtable.length];
             System.arraycopy(gtable, 0, gtableCopy, 0, gtable.length);
             G = new GEN(gtableCopy, j, Fitness(gtableCopy));
@@ -38,9 +37,10 @@ public class Genetic {
         Crossover();
     }
 
+
     public static void Crossover() {
 
-        if (generation <= 10) {
+        if (generation <= 5) {
             return;
         }
 
@@ -77,13 +77,13 @@ public class Genetic {
         for (int i = 0; i < generation / 2; i++){
             System.out.println("فرد " + i + " تناسب: " + Generation.get(i).getFitness());
         }
-        generation = generation-10000;
+        generation = generation/2;
         Mutation();
         Crossover();
     }
     public static void Mutation(){
         Random random = new Random();
-        int mutationRate = 20;
+        int mutationRate = 40;
         for (int i = 0; i < Generation.get(1).getGen().length; i++) {
             int genes[] =Generation.get(i).getGen();
             if (random.nextInt(100) < mutationRate) {

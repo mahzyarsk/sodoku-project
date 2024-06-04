@@ -88,6 +88,7 @@
       <TextField fx:id="T98" layoutX="294.0" layoutY="337.0" prefHeight="40.0" prefWidth="40.0" text="0" />
       <TextField fx:id="T99" layoutX="334.0" layoutY="337.0" prefHeight="40.0" prefWidth="40.0" text="0" />
       <Button layoutX="421.0" layoutY="37.0" mnemonicParsing="false" onAction="#Set_BTN" text="set" />
-      <Button layoutX="497.0" layoutY="37.0" mnemonicParsing="false" onAction="#Next_BTN" text="next" />
+      <Button layoutX="497.0" layoutY="37.0" mnemonicParsing="false" onAction="#Next_BTN" text="gen1" />
+      <Button layoutX="497.0" layoutY="85.0" mnemonicParsing="false" onAction="#Gen_BTN" text="gen2" />
    </children>
 </Pane>
