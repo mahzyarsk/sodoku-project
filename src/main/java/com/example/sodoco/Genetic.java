@@ -95,6 +95,25 @@ public class Genetic {
 
 
     }
+//    public static void Mutation() {
+//        Random rand = new Random();
+//        int mutationRate = 10; // نرخ جهش به درصد، می‌توان آن را تنظیم کرد
+//
+//        for (int i = 0; i < generation; i++) {
+//            int[] genes = Generation.get(i).getGen();
+//
+//            // اعمال جهش
+//            for (int j = 0; j < genes.length; j++) {
+//                if (rand.nextInt(100) < mutationRate) {
+//                    // تغییر تصادفی ژن در این مکان
+//                    genes[j] = rand.nextInt(10); // فرضاً عدد جدید بین 0 و 9 باشد
+//                }
+//            }
+//
+//            Generation.get(i).setGen(genes);
+//            Generation.get(i).setFitness(Fitness(Generation.get(i).getGen()));
+//        }
+//    }
 
     public static int Fitness(int ftable[]){
         int fitness =0;

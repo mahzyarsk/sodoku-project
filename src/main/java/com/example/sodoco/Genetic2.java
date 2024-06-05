@@ -95,8 +95,32 @@ public class Genetic2 {
             System.out.println("فرد " + i + " تناسب: " + Generation.get(i).getFitness());
         }
         generation = generation/2;
+        Mutation();
         Crossover();
+
     }
+    public static void Mutation() {
+        Random rand = new Random();
+        int mutationRate = 10; // نرخ جهش به درصد، می‌توان آن را تنظیم کرد
+
+        for (int i = 0; i < generation; i++) {
+            int[][] genes = Generation.get(i).getGen();
+
+            // اعمال جهش
+            for (int j = 0; j < 9; j++) {
+                for (int k = 0; k < 9; k++) {
+                    if (rand.nextInt(100) < mutationRate) {
+                        // تغییر تصادفی ژن در این مکان
+                        genes[j][k] = rand.nextInt(10); // فرضاً عدد جدید بین 0 و 9 باشد
+                    }
+                }
+            }
+
+            Generation.get(i).setGen(genes);
+            Generation.get(i).setFitness(Fitness(genes));
+        }
+    }
+
     public static int Fitness(int ftable[][]){
         int fitness =0;
         for (int i = 0; i < 9; i++) {
