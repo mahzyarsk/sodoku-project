@@ -1,22 +1,18 @@
 package com.example.sodoco;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Random;
+import java.util.*;
 
 public class Genetic2 {
     public static int gtable[][] =new int[9][9];
     public static Sodoku_controller s;
     public static  GEN2 G;
-    public static ArrayList<GEN2> Generation = new ArrayList<>();
+    public static List<GEN2> Generation = new ArrayList<>();
 
-    public static int generation =1000000;
+    public static int generation =5000;
     public static void genetic(int table[]) {
         Random random = new Random();
 
-        int min = 1; // Minimum value of range
-        int max = 9; // Maximum value of range
+
         for (int k = 0; k < generation; k++) {
             int a =0;
             for (int i = 0; i < 9 ; i++) {
@@ -28,7 +24,7 @@ public class Genetic2 {
             for (int i = 0; i < 9 ; i++) {
                 for (int j = 0; j < 9; j++) {
                     if(  gtable[i][j] == 0){
-                        gtable[i][j] = random.nextInt(max - min + 1) + min;
+                        gtable[i][j] =  random.nextInt(8)+1;
                     }
                 }
             }
@@ -43,10 +39,11 @@ public class Genetic2 {
         }
        // p();
         Collections.sort(Generation, Comparator.comparing(GEN2::getFitness));
-
+        Mutation();
         Crossover();
 
     }
+
     public static void p(){
         for (int i = 0; i < Generation.size(); i++) {
             for (int j = 0; j < 9; j++) {
@@ -57,47 +54,67 @@ public class Genetic2 {
             System.out.println();
         }
     }
-    public static void Crossover(){
+    public static void Crossover() {
+        Random random = new Random();
         if (generation <= 5) {
+           // p();
             return;
         }
-        for (int i = 0; i < generation -10; i=i+2){
+        ArrayList<GEN2> newGeneration = new ArrayList<>();
+        for (int i = 0; i < generation - 2; i += 1) {
             int[][] genes1 = Generation.get(i).getGen();
             int[][] genes2 = Generation.get(i + 1).getGen();
-            int[][] genes3 = Generation.get(i+2).getGen();
-            int[][] genes4 = Generation.get(i +1).getGen();
+
+            // Create offspring by combining parts of parents
+            int[][] offspring1 = new int[9][9];
+            int[][] offspring2 = new int[9][9];
+
+            int CrossoverP = random.nextInt(8) + 1;
+
             for (int j = 0; j < 9; j++) {
-                for (int k = 3; k < 9; k++) {
-                    int temp = genes4[j][k];
-                    genes4[j][k] = genes3[j][k];
-                    genes3[j][k] = temp;
+                for (int k = 0; k < CrossoverP; k++) {
+                    offspring1[j][k] = genes1[j][k];
+                    offspring2[j][k] = genes2[j][k];
                 }
-            }
-            for (int j = 0; j < 9; j++) {
-                for (int k = 4; k < 9; k++) {
-                    int temp = genes1[j][k];
-                    genes1[j][k] = genes2[j][k];
-                    genes2[j][k] = temp;
+                for (int k = CrossoverP; k < 9; k++) {
+                    offspring1[j][k] = genes2[j][k];
+                    offspring2[j][k] = genes1[j][k];
                 }
             }
 
-            Generation.get(i+1).setGen(genes4);
-            Generation.get(i+1).setFitness(Fitness(genes4));
-            Generation.get(i).setGen(genes1);
-            Generation.get(i).setFitness(Fitness(genes1));
-            if (Generation.get(i).getFitness() == 0) {
+            newGeneration.add(new GEN2(offspring1, generation, Fitness(offspring1)));
+            newGeneration.add(new GEN2(offspring2, generation, Fitness(offspring2)));
+
+            // Check for optimal fitness
+            if (newGeneration.get(newGeneration.size() - 1).getFitness() == 0) {
                 System.out.println("تناسب بهینه در اندیس " + i + " حاصل شد");
                 return;
             }
+            if (newGeneration.get(newGeneration.size() - 2).getFitness() == 0) {
+                System.out.println("تناسب بهینه در اندیس " + (i + 1) + " حاصل شد");
+                return;
+            }
         }
+
+        // Add new generation to the main generation list
+        Generation.addAll(newGeneration);
+
+        // Sort generation based on fitness
         Collections.sort(Generation, Comparator.comparing(GEN2::getFitness));
-        for (int i = 0; i < generation / 2; i++){
+
+        // Keep only the top half of the generation
+        Generation = Generation.subList(0, generation / 2);
+
+        // Update generation count
+        generation = Generation.size();
+
+        // Display top half fitness values
+        for (int i = 0; i < generation; i++) {
             System.out.println("فرد " + i + " تناسب: " + Generation.get(i).getFitness());
         }
-        generation = generation/2;
-        Mutation();
-        Crossover();
 
+      //  Mutation();
+        Crossover();
     }
     public static void Mutation() {
         Random rand = new Random();
@@ -121,22 +138,32 @@ public class Genetic2 {
         }
     }
 
-    public static int Fitness(int ftable[][]){
+    public static int Fitness(int genes[][]){
         int fitness =0;
         for (int i = 0; i < 9; i++) {
+            boolean[] seen = new boolean[10]; // 1 ta 9
             for (int j = 0; j < 9; j++) {
-                for (int k = 0; k < 9; k++) {
-                    if(ftable[i][j] == ftable[i][k]){
+                int num = genes[i][j];
+                if (num != 0) {
+                    if (seen[num]) {
                         fitness++;
+                    } else {
+                        seen[num] = true;
                     }
                 }
-
-                for (int k = 0; k < 9; k++) {
-                    if(ftable[i][j] == ftable[k][j]){
+            }
+        }
+  for (int j = 0; j < 9; j++) {
+            boolean[] seen = new boolean[10];
+            for (int i = 0; i < 9; i++) {
+                int num = genes[i][j];
+                if (num != 0) {
+                    if (seen[num]) {
                         fitness++;
+                    } else {
+                        seen[num] = true;
                     }
                 }
-                fitness= fitness -2;
             }
         }
         return fitness;

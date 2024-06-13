@@ -10,7 +10,7 @@ public class Genetic {
     public static Sodoku_controller s;
     public static  GEN G;
 
-    public static int generation =1000000;
+    public static int generation =150000;
     public static ArrayList<GEN> Generation = new ArrayList<>();
     public static void genetic(int table[]) {
         Random random = new Random();
@@ -39,51 +39,57 @@ public class Genetic {
 
 
     public static void Crossover() {
-
-        if (generation <= 5) {
+        Random random = new Random();
+        if (generation <= 5 ) {
             return;
         }
 
-
-        for (int i = 0; i < generation ; i=i+2) {
+        for (int i = 0; i < generation ; i=i+1) {
+            if (Generation.get(i).getFitness() == 0) {
+            System.out.println("تناسب بهینه در اندیس " + i + " حاصل شد");
+            return;
+        }
             int[] genes1 = Generation.get(i).getGen();
             int[] genes2 = Generation.get(i + 1).getGen();
-            int[] genes3 = Generation.get(i+2).getGen();
-            int[] genes4 = Generation.get(i +1).getGen();
+            int[] genes3 =Generation.get(i+1).getGen();
+            int[] genes4 = Generation.get(i + 2).getGen();
+
 
             for (int j = 0; j < genes4.length / 2; j++) {
                 int temp = genes4[j];
                 genes4[j] = genes3[j];
                 genes3[j] = temp;
-            } for (int j = 0; j < genes1.length / 2; j++) {
+            } for (int j = genes1.length-1; j > genes1.length / 2; j--) {
                 int temp = genes1[j];
                 genes1[j] = genes2[j];
                 genes2[j] = temp;
             }
-            Generation.get(i+1).setGen(genes4);
-            Generation.get(i+1).setFitness(Fitness(genes4));
-            Generation.get(i).setGen(genes1);
-            Generation.get(i).setFitness(Fitness(genes1));
+            G = new GEN(genes4,generation,Fitness(genes4));
+            Generation.add(G);
+            G = new GEN(genes1,generation,Fitness(genes1));
+            Generation.add(G);
+
+//            Generation.get(i+1).setGen(genes4);
+//            Generation.get(i+1).setFitness(Fitness(genes4));
+//            Generation.get(i).setGen(genes1);
+//            Generation.get(i).setFitness(Fitness(genes1));
 
 
-            if (Generation.get(i).getFitness() == 0) {
-                System.out.println("تناسب بهینه در اندیس " + i + " حاصل شد");
-                return;
-            }
+
         }
 
 
-        Collections.sort(Generation, Comparator.comparing(GEN::getFitness));
+        Generation.sort(Comparator.comparing(GEN::getFitness));
         for (int i = 0; i < generation / 2; i++){
             System.out.println("فرد " + i + " تناسب: " + Generation.get(i).getFitness());
         }
-        generation = generation/2;
-        Mutation();
+        generation = (generation/2);
+        //Mutation();
         Crossover();
     }
     public static void Mutation(){
         Random random = new Random();
-        int mutationRate = 40;
+        int mutationRate = 15;
         for (int i = 0; i < Generation.get(1).getGen().length; i++) {
             int genes[] =Generation.get(i).getGen();
             if (random.nextInt(100) < mutationRate) {

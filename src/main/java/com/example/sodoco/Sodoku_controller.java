@@ -37,4 +37,11 @@ public class Sodoku_controller {
             g.genetic(temp);
         }
     }
+
+    public void Csp_BTN(ActionEvent event) {
+        if (set){
+            CSP g =new CSP();
+            g.Csp(temp);
+        }
+    }
 }
