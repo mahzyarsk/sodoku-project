@@ -7,24 +7,27 @@ public class Genetic2 {
     public static Sodoku_controller s;
     public static  GEN2 G;
     public static List<GEN2> Generation = new ArrayList<>();
+    public static ArrayList<Integer> Number = new ArrayList<>();
 
     public static int generation =5000;
     public static void genetic(int table[]) {
-        Random random = new Random();
-
-
         for (int k = 0; k < generation; k++) {
             int a =0;
+            for (int r = 1; r <=9 ; r++) {
+                Number.add(r);
+            }
             for (int i = 0; i < 9 ; i++) {
                 for (int j = 0; j < 9; j++) {
                     gtable[i][j] = table[a];
                     a++;
                 }
             }
-            for (int i = 0; i < 9 ; i++) {
+
+            for (int i = 0; i < 9; i++) {
+                Shufflelist(Number);
                 for (int j = 0; j < 9; j++) {
-                    if(  gtable[i][j] == 0){
-                        gtable[i][j] =  random.nextInt(8)+1;
+                    if (gtable[i][j] == 0) {
+                        gtable[i][j] = Number.get(j);
                     }
                 }
             }
@@ -64,28 +67,21 @@ public class Genetic2 {
         for (int i = 0; i < generation - 2; i += 1) {
             int[][] genes1 = Generation.get(i).getGen();
             int[][] genes2 = Generation.get(i + 1).getGen();
-
-            // Create offspring by combining parts of parents
-            int[][] offspring1 = new int[9][9];
-            int[][] offspring2 = new int[9][9];
-
+            int[][] kid1 = new int[9][9];
+            int[][] kid2 = new int[9][9];
             int CrossoverP = random.nextInt(8) + 1;
-
             for (int j = 0; j < 9; j++) {
                 for (int k = 0; k < CrossoverP; k++) {
-                    offspring1[j][k] = genes1[j][k];
-                    offspring2[j][k] = genes2[j][k];
+                    kid1[j][k] = genes1[j][k];
+                    kid2[j][k] = genes2[j][k];
                 }
                 for (int k = CrossoverP; k < 9; k++) {
-                    offspring1[j][k] = genes2[j][k];
-                    offspring2[j][k] = genes1[j][k];
+                    kid1[j][k] = genes2[j][k];
+                    kid2[j][k] = genes1[j][k];
                 }
             }
-
-            newGeneration.add(new GEN2(offspring1, generation, Fitness(offspring1)));
-            newGeneration.add(new GEN2(offspring2, generation, Fitness(offspring2)));
-
-            // Check for optimal fitness
+            newGeneration.add(new GEN2(kid1, generation, Fitness(kid1)));
+            newGeneration.add(new GEN2(kid2, generation, Fitness(kid2)));
             if (newGeneration.get(newGeneration.size() - 1).getFitness() == 0) {
                 System.out.println("تناسب بهینه در اندیس " + i + " حاصل شد");
                 return;
@@ -95,20 +91,13 @@ public class Genetic2 {
                 return;
             }
         }
-
-        // Add new generation to the main generation list
+        // ezafe kardan
         Generation.addAll(newGeneration);
-
-        // Sort generation based on fitness
+        //sort
         Collections.sort(Generation, Comparator.comparing(GEN2::getFitness));
-
-        // Keep only the top half of the generation
+        // delet gen be arzesh
         Generation = Generation.subList(0, generation / 2);
-
-        // Update generation count
         generation = Generation.size();
-
-        // Display top half fitness values
         for (int i = 0; i < generation; i++) {
             System.out.println("فرد " + i + " تناسب: " + Generation.get(i).getFitness());
         }
@@ -118,17 +107,13 @@ public class Genetic2 {
     }
     public static void Mutation() {
         Random rand = new Random();
-        int mutationRate = 10; // نرخ جهش به درصد، می‌توان آن را تنظیم کرد
-
+        int mutationRate = 10;
         for (int i = 0; i < generation; i++) {
             int[][] genes = Generation.get(i).getGen();
-
-            // اعمال جهش
             for (int j = 0; j < 9; j++) {
                 for (int k = 0; k < 9; k++) {
                     if (rand.nextInt(100) < mutationRate) {
-                        // تغییر تصادفی ژن در این مکان
-                        genes[j][k] = rand.nextInt(10); // فرضاً عدد جدید بین 0 و 9 باشد
+                        genes[j][k] = rand.nextInt(10);
                     }
                 }
             }
@@ -167,6 +152,16 @@ public class Genetic2 {
             }
         }
         return fitness;
+    }
+
+    public static void Shufflelist(ArrayList<Integer> list) {
+        Random rand = new Random();
+        for (int i = list.size() - 1; i > 0; i--) {
+            int j = rand.nextInt(i + 1);
+            int temp = list.get(i);
+            list.set(i, list.get(j));
+            list.set(j, temp);
+        }
     }
 
 }

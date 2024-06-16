@@ -121,22 +121,31 @@ public class Genetic {
 //        }
 //    }
 
-    public static int Fitness(int ftable[]){
-        int fitness =0;
-        for (int i = 0; i < ftable.length; i++) {
-            for (int j = i+1; j < ftable.length; j =j+ 9) {
-                if(ftable[i]==ftable[j]){
-                    fitness++;
-                }
-            }
-            for (int j = i+1; j%10 < 9  && j < 81; j++) {
-                if(ftable[i]==ftable[j]){
-                    fitness++;
-                }
-            }
+    public static int Fitness(int ftable[]) {
+        int fitness = 0;
 
+        // satr
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+                for (int k = col + 1; k < 9; k++) {
+                    if (ftable[row * 9 + col] == ftable[row * 9 + k]) {
+                        fitness++;
+                    }
+                }
+            }
         }
-        return fitness;
 
+        // sotoon
+        for (int col = 0; col < 9; col++) {
+            for (int row = 0; row < 9; row++) {
+                for (int k = row + 1; k < 9; k++) {
+                    if (ftable[row * 9 + col] == ftable[k * 9 + col]) {
+                        fitness++;
+                    }
+                }
+            }
+        }
+
+        return fitness;
     }
 }

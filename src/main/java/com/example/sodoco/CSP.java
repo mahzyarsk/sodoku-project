@@ -63,28 +63,35 @@ public class CSP {
 
         return possible.get(possible.size()-1);
     }
-    public static int Fitness(int ftable[][]){
+    public static int Fitness(int genes[][]){
         int fitness =0;
         for (int i = 0; i < 9; i++) {
+            boolean[] seen = new boolean[10]; // 1 ta 9
             for (int j = 0; j < 9; j++) {
-                for (int k = 0; k < 9; k++) {
-                    if(ftable[i][j] == ftable[i][k]){
+                int num = genes[i][j];
+                if (num != 0) {
+                    if (seen[num]) {
                         fitness++;
+                    } else {
+                        seen[num] = true;
                     }
                 }
-                fitness--;
-
-                for (int k = 0; k < 9; k++) {
-                    if(ftable[i][j] == ftable[k][j]){
-                        fitness++;
-                    }
-                }
-                fitness--;
             }
-
+        }
+        for (int j = 0; j < 9; j++) {
+            boolean[] seen = new boolean[10];
+            for (int i = 0; i < 9; i++) {
+                int num = genes[i][j];
+                if (num != 0) {
+                    if (seen[num]) {
+                        fitness++;
+                    } else {
+                        seen[num] = true;
+                    }
+                }
+            }
         }
         return fitness;
-
     }
 
 
