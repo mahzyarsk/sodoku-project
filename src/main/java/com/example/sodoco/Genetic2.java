@@ -11,11 +11,12 @@ public class Genetic2 {
 
     public static int generation =5000;
     public static void genetic(int table[]) {
-        for (int k = 0; k < generation; k++) {
+        for (int r = 1; r <10; r++) {
+        Number.add(r);
+    }
+        for (int k = 0; k <= generation; k++) {
             int a =0;
-            for (int r = 1; r <=9 ; r++) {
-                Number.add(r);
-            }
+
             for (int i = 0; i < 9 ; i++) {
                 for (int j = 0; j < 9; j++) {
                     gtable[i][j] = table[a];
@@ -42,7 +43,7 @@ public class Genetic2 {
         }
        // p();
         Collections.sort(Generation, Comparator.comparing(GEN2::getFitness));
-        Mutation();
+       // Mutation();
         Crossover();
 
     }
@@ -61,6 +62,8 @@ public class Genetic2 {
         Random random = new Random();
         if (generation <= 5) {
            // p();
+            Sodoku_controller s = new Sodoku_controller();
+            s.Panswer(Generation.get(0).getGen());
             return;
         }
         ArrayList<GEN2> newGeneration = new ArrayList<>();
@@ -113,7 +116,7 @@ public class Genetic2 {
             for (int j = 0; j < 9; j++) {
                 for (int k = 0; k < 9; k++) {
                     if (rand.nextInt(100) < mutationRate) {
-                        genes[j][k] = rand.nextInt(10);
+                        genes[j][k] = rand.nextInt(8)+1;
                     }
                 }
             }

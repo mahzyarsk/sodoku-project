@@ -8,7 +8,8 @@ public class CSP {
     public static ArrayList<Integer> possible = new ArrayList<>();
     public static ArrayList<CSPC> CspNode = new ArrayList<>();
     public static CSPC C ;
-    public static int node = 0  , level =0;
+    public static int[][] javab ;
+    public static int node = 0 , select=0  ;
     public static void Csp(int table[]){
         int a =0;
         for (int i = 0; i < 9 ; i++) {
@@ -36,6 +37,9 @@ public class CSP {
         C = new CSPC(tabel,1,Fitness(tabel));
         CspNode.add(C);
         System.out.println(Fitness(tabel));
+        Sodoku_controller s =new Sodoku_controller();
+        s.Panswer(tabel);
+
 //        for (int i = 0; i < 9; i++) {
 //            for (int j = 0; j < 9; j++) {
 //                System.out.println(CspNode.get(1).getGen()[i][j]);
@@ -52,10 +56,12 @@ public class CSP {
         int f = Fitness(ptable) ,pnumber =0;
         for (int k = 1; k < 10; k++) {
             ptable[i][j]=k;
-            if(Fitness(ptable) < f){
+            select= random.nextInt(10 - 0)+3;
+            if(Fitness(ptable) < f ){
                 possible.add(k);
-                pnumber = k;
-
+                f = Fitness(ptable);
+            } if(Fitness(ptable) <= f ){
+                possible.add(k);
                 f = Fitness(ptable);
             }
 
@@ -75,6 +81,8 @@ public class CSP {
                     } else {
                         seen[num] = true;
                     }
+                }else {
+                    fitness++;
                 }
             }
         }
@@ -88,11 +96,21 @@ public class CSP {
                     } else {
                         seen[num] = true;
                     }
+                }else {
+                    fitness++;
                 }
             }
         }
         return fitness;
     }
 
-
+    public static void Shufflelist(ArrayList<Integer> list) {
+        Random rand = new Random();
+        for (int i = list.size() - 1; i > 0; i--) {
+            int j = rand.nextInt(i + 1);
+            int temp = list.get(i);
+            list.set(i, list.get(j));
+            list.set(j, temp);
+        }
+    }
 }
